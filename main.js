@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let progress = { val: 0 };
     gsap.to(progress, {
         val: 100,
-        duration: 1.8,
+        duration: window.innerWidth > 768 ? 1.8 : 0.2, // Skip preloader penalty on mobile
         ease: "power2.inOut",
         onUpdate: () => {
             const v = Math.round(progress.val);

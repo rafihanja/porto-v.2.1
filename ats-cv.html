@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV_ATS_Rafih_Anja</title>
+    <title>CV rafih anja</title>
     <style>
         /* Print and ATS friendly styles */
         body {
@@ -96,14 +96,14 @@
     </style>
 </head>
 <body>
-    <button class="print-btn no-print" id="download-btn">⬇ Download PDF</button>
+    <button class="print-btn no-print" id="download-btn">Download PDF</button>
 
     <div id="cv-content">
         <h1>RAFIH ANJA</h1>
         <div class="subtitle">Front-End Developer & UI/UX Enthusiast</div>
         <div class="contact-info">
-            📍 Tangerang, Banten, Indonesia | 📧 <a href="mailto:rafhanja28@gmail.com">rafhanja28@gmail.com</a> | 📱 +62 838-3701-7627 <br>
-            🔗 <a href="https://project-porto-v1-0.vercel.app/">Portfolio</a> | 🐙 <a href="https://github.com/rafihanja">GitHub: rafihanja</a>
+            Tangerang, Banten, Indonesia | <a href="mailto:rafhanja28@gmail.com">rafhanja28@gmail.com</a> | +62 838-3701-7627 <br>
+            <a href="https://project-porto-v1-0.vercel.app/">Portfolio</a> | <a href="https://github.com/rafihanja">GitHub: rafihanja</a>
         </div>
 
         <h2>PROFESSIONAL SUMMARY</h2>
@@ -161,19 +161,20 @@
             element.style.padding = '20px 40px';
             
             const opt = {
-                margin:       10,
-                filename:     'CV_Rafih_Anja_FrontEnd.pdf',
+                margin:       [10, 10, 10, 10], // Top, Left, Bottom, Right
+                filename:     'CV_rafih_anja.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: 'avoid-all' } // Mencegah teks terpotong di halaman baru
             };
 
             // Ubah teks tombol pas lagi loading
             const btn = this;
-            btn.innerText = '⏳ Sedang Membuat PDF...';
+            btn.innerText = 'Sedang Membuat PDF...';
             
             html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerText = '⬇ Download PDF';
+                btn.innerText = 'Download PDF';
                 element.style.padding = originalPadding;
             });
         });

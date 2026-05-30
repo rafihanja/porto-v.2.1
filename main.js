@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
         lerp: 0.08, // Lerp is much smoother and performant on lower-end devices than fixed duration
         wheelMultiplier: 0.8, // Slightly softer wheel
         smoothWheel: true,
-        syncTouch: true, // Native-like touch scrolling
-        smoothTouch: true,
+        syncTouch: false, // Turn off on mobile to prevent scroll fighting/jumping
+        smoothTouch: false, // Let native mobile scrolling take over
     });
 
     function raf(time) {
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let progress = { val: 0 };
     gsap.to(progress, {
         val: 100,
-        duration: window.innerWidth > 768 ? 1.8 : 0.2, // Skip preloader penalty on mobile
+        duration: window.innerWidth > 768 ? 1.8 : 0.8, // Loadscreen 0.8 detik di mobile
         ease: "power2.inOut",
         onUpdate: () => {
             const v = Math.round(progress.val);

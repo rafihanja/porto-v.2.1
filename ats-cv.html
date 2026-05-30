@@ -153,44 +153,20 @@
 
         <p><strong>SMA Al Fusha Islamic Boarding School</strong><br>
         <em>MIPA (Matematika dan Ilmu Pengetahuan Alam)</em><br>
-        Tangerang, Banten | 2019 - 2022</p>
+        Pekalongan, Jawa Tengah | 2019 - 2022</p>
     </div>
 
-    <!-- Script to generate direct PDF download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Script to trigger Native Browser Print for perfect ATS text & links -->
     <script>
         document.getElementById('download-btn').addEventListener('click', function () {
-            const element = document.getElementById('cv-content');
-            
-            // Temporary styles for PDF generation
-            const originalPadding = element.style.padding;
-            element.style.padding = '20px 40px';
-            
-            const opt = {
-                margin:       [10, 10, 10, 10], // Top, Left, Bottom, Right
-                filename:     'CV_rafih_anja.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: 'avoid-all' },
-                enableLinks:  true // Mengaktifkan link URL supaya bisa diklik di dalam PDF
-            };
-
-            // Ubah teks tombol pas lagi loading
-            const btn = this;
-            btn.innerText = 'Sedang Membuat PDF...';
-            
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerText = 'Download PDF';
-                element.style.padding = originalPadding;
-            });
+            window.print();
         });
 
         // Auto-download logic jika diakses dari web utama
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('download') === 'true') {
             setTimeout(() => {
-                document.getElementById('download-btn').click();
+                window.print();
             }, 500);
         }
     </script>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rafih Anja | Interactive Developer</title>
+    
+    <!-- Elegant Fonts: Inter for minimal body, JetBrains Mono for Terminal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Lenis Native Setup */
+        html.lenis, html.lenis body { height: auto; width: 100vw; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-smooth iframe { pointer-events: none; }
+    </style>
+</head>
+<body class="loading-state">
+
+    <!-- WebGL Background Container -->
+    <div id="webgl-container"></div>
+
+    <!-- SVGs and Filters (Hidden) -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Custom UI Icons -->
+            <symbol id="icon-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+            </symbol>
+            <symbol id="icon-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </symbol>
+            <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </symbol>
+            <symbol id="icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </symbol>
+            
+            <!-- Minimalist Mask for Photo -->
+            <clipPath id="photo-mask" clipPathUnits="objectBoundingBox">
+                <rect x="0" y="0" width="1" height="1" rx="0.1" ry="0.1" />
+            </clipPath>
+        </defs>
+    </svg>
+
+    <!-- Custom Micro Cursor -->
+    <div id="micro-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <!-- Corner Brackets -->
+        <div class="pl-corner pl-tl"></div>
+        <div class="pl-corner pl-tr"></div>
+        <div class="pl-corner pl-bl"></div>
+        <div class="pl-corner pl-br"></div>
+
+        <!-- Animated scan lines -->
+        <div class="pl-scanline"></div>
+        
+        <!-- Spinning Ring -->
+        <div class="pl-ring"></div>
+
+        <div class="preloader-content-huge">
+            <div class="preloader-counter">
+                <span class="preloader-percent-huge">0</span><span class="preloader-percent-symbol">%</span>
+            </div>
+            <div class="preloader-progress-line">
+                <div class="preloader-progress-fill"></div>
+            </div>
+            <div class="preloader-status">
+                <span class="status-text" id="preloader-status-text">[ BOOTING SYSTEM ]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <span class="brand-name">Rafih Anja.</span>
+                <span class="brand-role" data-en="Junior Developer" data-id="Junior Developer">Junior Developer</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#about" class="nav-link" data-en="About" data-id="Tentang">Tentang</a>
+                <a href="#journey" class="nav-link" data-en="Journey" data-id="Perjalanan">Perjalanan</a>
+                <a href="#projects" class="nav-link" data-en="Work" data-id="Karya">Karya</a>
+                <div class="lang-toggle">
+                    <button class="lang-btn id active">ID</button>
+                    <span class="lang-sep">/</span>
+                    <button class="lang-btn en">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- ==========================================
+                 SECTION 01: HERO (Minimal & Abstract)
+                 ========================================== -->
+            <section id="hero" class="section-hero">
+                <div class="hero-content">
+                    <!-- Hero Typography (Small & Elegant) -->
+                    <div class="hero-text">
+                        <h1 class="elegant-heading">
+                            <span class="split-lines" data-en="Crafting digital" data-id="Merangkai pengalaman">Merangkai pengalaman</span><br>
+                            <span class="split-lines" data-en="experiences with" data-id="digital dengan">digital dengan</span><br>
+                            <span class="split-lines" data-en="precision." data-id="presisi.">presisi.</span>
+                        </h1>
+                        <p class="hero-desc split-lines" data-en="I build interactive web applications that focus on performance, clean architecture, and subtle micro-interactions." data-id="Saya membangun aplikasi web interaktif yang berfokus pada performa, arsitektur bersih, dan interaksi mikro yang halus.">
+                            Saya membangun aplikasi web interaktif yang berfokus pada performa, arsitektur bersih, dan interaksi mikro yang halus.
+                        </p>
+                    </div>
+
+                    <!-- Terminal UI Simulation -->
+                    <div class="terminal-ui">
+                        <div class="term-header">
+                            <div class="term-btns">
+                                <span class="t-btn r"></span><span class="t-btn y"></span><span class="t-btn g"></span>
+                            </div>
+                            <div class="term-title">rafih_anja ~ bash</div>
+                        </div>
+                        <div class="term-body">
+                            <div class="term-line">
+                                <span class="prompt">$</span>
+                                <span class="typing-text" id="typewriter-1" data-id="whoami" data-en="whoami">whoami</span>
+                            </div>
+                            <div class="term-line output hidden" id="term-out-1" data-en="> Rafih Anja&#10;> Frontend Developer" data-id="> Rafih Anja&#10;> Frontend Developer">
+                                > Rafih Anja<br>
+                                > Frontend Developer
+                            </div>
+                            <div class="term-line hidden" id="term-line-2">
+                                <span class="prompt">$</span>
+                                <span class="typing-text" id="typewriter-2" data-id="./execute_portfolio.sh" data-en="./execute_portfolio.sh">./execute_portfolio.sh</span>
+                            </div>
+                            <div class="term-line output hidden" id="term-out-2">
+                                <span class="system-msg" data-id="Memuat aset digital..." data-en="Loading digital assets...">Memuat aset digital...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-indicator">
+                    <div class="mouse-icon">
+                        <div class="wheel"></div>
+                    </div>
+                    <span class="scroll-text" data-en="Scroll" data-id="Gulir">Gulir</span>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 02: ABOUT & SKILLS (Asymmetric)
+                 ========================================== -->
+            <section id="about" class="section-about">
+                <div class="about-grid">
+                    
+                    <!-- Small Photo & Bio -->
+                    <div class="about-col-left">
+                        <div class="small-photo-wrap">
+                            <img src="assets/profile.jpg" alt="Rafih Anja" class="small-photo">
+                            <div class="photo-decor"></div>
+                        </div>
+                        
+                        <div class="bio-content">
+                            <h2 class="section-label" data-en="01 // ABOUT ME" data-id="01 // TENTANG SAYA">01 // TENTANG SAYA</h2>
+                            <p class="bio-text" data-en="Based in Tangerang, Banten. I approach frontend development not just as a coding task, but as an engineering discipline. I believe in writing code that is as elegant under the hood as the interface it produces." data-id="Berbasis di Tangerang, Banten. Saya mendekati pengembangan frontend bukan sekadar tugas pengkodean, melainkan disiplin rekayasa. Saya percaya pada penulisan kode yang sama elegannya di belakang layar dengan antarmuka yang dihasilkannya.">
+                                Berbasis di Tangerang, Banten. Saya mendekati pengembangan frontend bukan sekadar tugas pengkodean, melainkan disiplin rekayasa. Saya percaya pada penulisan kode yang sama elegannya di belakang layar dengan antarmuka yang dihasilkannya.
+                            </p>
+                            <a href="ats-cv.html?download=true" class="cv-link interactive-hover">
+                                <svg width="16" height="16"><use href="#icon-download"></use></svg>
+                                <span data-en="Download ATS Resume" data-id="Unduh Resume ATS">Unduh Resume ATS</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Skills (Low percentages, realistic) -->
+                    <div class="about-col-right">
+                        <h2 class="section-label" data-en="02 // EXPERTISE" data-id="02 // KEAHLIAN">02 // KEAHLIAN</h2>
+                        <div class="skills-list">
+                            
+                            <!-- Skill 1 -->
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">React</span>
+                                    <span class="skill-pct">0%</span>
+                                </div>
+                                <div class="skill-track">
+                                    <!-- Junior level 58% -->
+                                    <div class="skill-fill" data-target="58"></div>
+                                </div>
+                            </div>
+
+                            <!-- Skill 2 -->
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Next.js</span>
+                                    <span class="skill-pct">0%</span>
+                                </div>
+                                <div class="skill-track">
+                                    <!-- Junior level 52% -->
+                                    <div class="skill-fill" data-target="52"></div>
+                                </div>
+                            </div>
+
+                            <!-- Skill 3 -->
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Tailwind CSS</span>
+                                    <span class="skill-pct">0%</span>
+                                </div>
+                                <div class="skill-track">
+                                    <!-- Junior level 59% -->
+                                    <div class="skill-fill" data-target="59"></div>
+                                </div>
+                            </div>
+
+                            <!-- Skill 4 -->
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">GSAP & Animations</span>
+                                    <span class="skill-pct">0%</span>
+                                </div>
+                                <div class="skill-track">
+                                    <!-- Junior level 55% -->
+                                    <div class="skill-fill" data-target="55"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <p class="skill-note" data-en="* Percentages represent my self-assessed junior proficiency level relative to senior industry standards." data-id="* Persentase mewakili tingkat kemahiran junior yang saya nilai sendiri relatif terhadap standar industri senior.">
+                            * Persentase mewakili tingkat kemahiran junior yang saya nilai sendiri relatif terhadap standar industri senior.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 03: JOURNEY TIMELINE
+                 ========================================== -->
+            <section id="journey" class="section-journey">
+                <h2 class="section-label center" data-en="03 // JOURNEY" data-id="03 // PERJALANAN">03 // PERJALANAN</h2>
+                
+                <div class="timeline-container">
+                    <div class="timeline-line">
+                        <div class="timeline-progress"></div>
+                    </div>
+                    
+                    <div class="timeline-nodes">
+                        <!-- Node 1 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="time-year" data-en="2019 - 2022" data-id="2019 - 2022">2019 - 2022</span>
+                                <h3 class="time-title" data-en="SMA Al Fusha Islamic Boarding School" data-id="SMA Al Fusha Islamic Boarding School">SMA Al Fusha Islamic Boarding School</h3>
+                                <p class="time-desc" data-en="Science Major (MIPA). Developed strong logical thinking and analytical foundations while maintaining discipline in a boarding school environment." data-id="Jurusan MIPA. Mengembangkan pemikiran logis dan fondasi analitis yang kuat sambil menjaga kedisiplinan di lingkungan pondok pesantren.">
+                                    Jurusan MIPA. Mengembangkan pemikiran logis dan fondasi analitis yang kuat sambil menjaga kedisiplinan di lingkungan pondok pesantren.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Node 2 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="time-year" data-en="2022 - 2026" data-id="2022 - 2026">2022 - 2026</span>
+                                <h3 class="time-title" data-en="UIN Banten" data-id="UIN Banten">UIN Banten</h3>
+                                <p class="time-desc" data-en="Hukum Ekonomi Syariah (HES). Balancing legal and economic studies with a strong passion for self-taught frontend engineering." data-id="Hukum Ekonomi Syariah (HES). Menyeimbangkan studi hukum dan ekonomi dengan minat kuat belajar mandiri di bidang frontend engineering.">
+                                    Hukum Ekonomi Syariah (HES). Menyeimbangkan studi hukum dan ekonomi dengan minat kuat belajar mandiri di bidang frontend engineering.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Node 3 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="time-year" data-en="2024 - Present" data-id="2024 - Sekarang">2024 - Present</span>
+                                <h3 class="time-title" data-en="Frontend Development" data-id="Frontend Development">Frontend Development</h3>
+                                <p class="time-desc" data-en="Started diving deep into the modern web ecosystem. Building interactive applications using React, Next.js, and GSAP." data-id="Mulai mendalami ekosistem web modern. Membangun aplikasi interaktif menggunakan React, Next.js, dan GSAP.">
+                                    Mulai mendalami ekosistem web modern. Membangun aplikasi interaktif menggunakan React, Next.js, dan GSAP.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 04: FLOATING PROJECTS
+                 ========================================== -->
+            <section id="projects" class="section-projects horizontal-scroll-section">
+                <div class="projects-header">
+                    <h2 class="section-label" data-en="04 // SELECTED WORKS" data-id="04 // KARYA PILIHAN">04 // KARYA PILIHAN</h2>
+                    <p class="proj-intro" data-en="A collection of 4 projects demonstrating my progression as a developer." data-id="Koleksi 4 proyek yang mendemonstrasikan perkembangan saya sebagai developer.">
+                        Koleksi 4 proyek yang mendemonstrasikan perkembangan saya sebagai developer.
+                    </p>
+                </div>
+                
+                <div class="horizontal-scroll-wrapper">
+                    <div class="horizontal-scroll-container">
+                        
+                        <!-- Project 1 -->
+                        <div class="h-project-card">
+                            <div class="h-card-image-wrap">
+                                <img src="assets/zenith.png" alt="Zenith Matcha">
+                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-top">
+                                    <span class="h-card-tag">Next.js / Tailwind</span>
+                                </div>
+                                <div class="h-card-info">
+                                    <h3 data-en="Zenith Matcha" data-id="Zenith Matcha">Zenith Matcha</h3>
+                                    <p data-en="E-commerce exploration with deep dark-mode aesthetics." data-id="Eksplorasi E-commerce dengan estetika mode gelap pekat.">Eksplorasi E-commerce dengan estetika mode gelap pekat.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2 -->
+                        <div class="h-project-card">
+                            <div class="h-card-image-wrap">
+                                <img src="assets/cek_zakat.png" alt="Cek Zakat">
+                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-top">
+                                    <span class="h-card-tag">Vue.js / CSS</span>
+                                </div>
+                                <div class="h-card-info">
+                                    <h3 data-en="Cek Zakat" data-id="Cek Zakat">Cek Zakat</h3>
+                                    <p data-en="Interactive financial tool utilizing complex calculation rules." data-id="Alat finansial interaktif yang menggunakan aturan kalkulasi kompleks.">Alat finansial interaktif yang menggunakan aturan kalkulasi kompleks.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3 -->
+                        <div class="h-project-card">
+                            <div class="h-card-image-wrap">
+                                <img src="assets/weather.png" alt="Weather Dash">
+                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-top">
+                                    <span class="h-card-tag">API / JS / Chart.js</span>
+                                </div>
+                                <div class="h-card-info">
+                                    <h3 data-en="Weather Dash" data-id="Weather Dash">Weather Dash</h3>
+                                    <p data-en="REST API integration dashboard displaying real-time weather data." data-id="Dasbor integrasi REST API yang menampilkan data cuaca real-time.">Dasbor integrasi REST API yang menampilkan data cuaca real-time.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 4 -->
+                        <div class="h-project-card">
+                            <div class="h-card-image-wrap">
+                                <img src="assets/tasker.png" alt="Tasker (CRUD)">
+                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-top">
+                                    <span class="h-card-tag">React / LocalStorage</span>
+                                </div>
+                                <div class="h-card-info">
+                                    <h3 data-en="Tasker (CRUD)" data-id="Tasker (CRUD)">Tasker (CRUD)</h3>
+                                    <p data-en="A minimalist task management application demonstrating state management." data-id="Aplikasi manajemen tugas minimalis yang mendemonstrasikan state management.">Aplikasi manajemen tugas minimalis yang mendemonstrasikan state management.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================
+                 SECTION 05: FOOTER
+                 ========================================== -->
+            <footer class="site-footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p class="footer-title" data-en="Rafih Anja" data-id="Rafih Anja">Rafih Anja</p>
+                        <a href="mailto:rafhanja28@gmail.com" class="footer-email interactive-hover">rafhanja28@gmail.com</a>
+                    </div>
+                    <div class="footer-right">
+                        <div class="social-links">
+                            <a href="https://github.com/rafihanja" target="_blank" class="interactive-hover">GitHub</a>
+                            <a href="#" class="interactive-hover">LinkedIn</a>
+                            <a href="#" class="interactive-hover">Twitter</a>
+                        </div>
+                        <p class="copyright">&copy; 2026. <span data-en="Built with code." data-id="Dibangun dengan kode.">Dibangun dengan kode.</span></p>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    
+    <!-- Three.js for WebGL Shader Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Custom Main Script (Targeting 800 lines of complex logic) -->
+    <script src="main.js"></script>
+
+</body>
+</html>

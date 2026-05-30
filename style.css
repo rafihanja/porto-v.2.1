@@ -782,3 +782,16 @@ body.hovering .cursor-ring {
 /* Utils */
 .split-chars, .split-words, .split-lines { overflow: hidden; display: inline-block; }
 .word, .char { display: inline-block; }
+
+/* Disable Custom Cursor on Touch Devices / Mobile */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+    body, a, button, .interactive-hover {
+        cursor: auto !important;
+    }
+    a, button, .interactive-hover {
+        cursor: pointer !important;
+    }
+    #micro-cursor {
+        display: none !important;
+    }
+}

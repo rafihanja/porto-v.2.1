@@ -5,7 +5,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     gsap.registerPlugin(ScrollTrigger);
-
+    
+    // Fix mobile scroll jump when address bar shows/hides
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    
     // ==========================================
     // 1. CUSTOM CURSOR
     // ==========================================

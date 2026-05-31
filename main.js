@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================
     const container = document.getElementById('webgl-container');
     try {
-        if (window.innerWidth > 768) {
+        if (true || window.innerWidth > 768) {
             const scene = new THREE.Scene();
             const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
             const renderer = new THREE.WebGLRenderer({ alpha: true });

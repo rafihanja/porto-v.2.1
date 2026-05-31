@@ -433,10 +433,8 @@ document.addEventListener("DOMContentLoaded", () => {
             scene.add(mesh);
 
             window.addEventListener('resize', () => {
-                if(window.innerWidth > 768) {
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                    uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
-                }
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
             });
 
             lenis.on('scroll', (e) => { uniforms.scroll.value = e.scroll; });

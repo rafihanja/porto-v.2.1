@@ -8,9 +8,9 @@
     <!-- Elegant Fonts: Inter for minimal body, JetBrains Mono for Terminal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5">
     
     <style>
         /* Lenis Native Setup */
@@ -118,12 +118,12 @@
                     <!-- Hero Typography (Small & Elegant) -->
                     <div class="hero-text">
                         <h1 class="elegant-heading">
-                            <span class="split-lines" data-en="Crafting digital" data-id="Merangkai pengalaman">Merangkai pengalaman</span><br>
-                            <span class="split-lines" data-en="experiences with" data-id="digital dengan">digital dengan</span><br>
-                            <span class="split-lines" data-en="precision." data-id="presisi.">presisi.</span>
+                            <span class="split-lines" data-en="Visuals that tell a story," data-id="Visual yang bercerita,">Visual yang bercerita,</span><br>
+                            <span class="split-lines" data-en="code that works," data-id="kode yang bekerja,">kode yang bekerja,</span><br>
+                            <span class="split-lines" data-en="unforgettable experience." data-id="pengalaman tak terlupa.">pengalaman tak terlupa.</span>
                         </h1>
-                        <p class="hero-desc split-lines" data-en="I build interactive web applications that focus on performance, clean architecture, and subtle micro-interactions." data-id="Saya membangun aplikasi web interaktif yang berfokus pada performa, arsitektur bersih, dan interaksi mikro yang halus.">
-                            Saya membangun aplikasi web interaktif yang berfokus pada performa, arsitektur bersih, dan interaksi mikro yang halus.
+                        <p class="hero-desc split-lines" data-en="Hi! I craft web interfaces using React and GSAP. My focus is simple: creating buttery smooth animations that won't slow down your device." data-id="Halo! Saya biasa bikin tampilan web pakai React dan GSAP. Fokus saya simpel: bikin animasi yang mulus banget tapi nggak bikin HP atau laptop jadi lemot.">
+                            Halo! Saya biasa bikin tampilan web pakai React dan GSAP. Fokus saya simpel: bikin animasi yang mulus banget tapi nggak bikin HP atau laptop jadi lemot.
                         </p>
                     </div>
 
@@ -149,7 +149,7 @@
                                 <span class="typing-text" id="typewriter-2" data-id="./execute_portfolio.sh" data-en="./execute_portfolio.sh">./execute_portfolio.sh</span>
                             </div>
                             <div class="term-line output hidden" id="term-out-2">
-                                <span class="system-msg" data-id="Memuat aset digital..." data-en="Loading digital assets...">Memuat aset digital...</span>
+                                <span class="system-msg" data-id="Peringatan: Interaksi terlalu mulus. Memuat..." data-en="Warning: Interactions are too smooth. Loading...">Peringatan: Interaksi terlalu mulus. Memuat...</span>
                             </div>
                         </div>
                     </div>
@@ -178,8 +178,8 @@
                         
                         <div class="bio-content">
                             <h2 class="section-label" data-en="01 // ABOUT ME" data-id="01 // TENTANG SAYA">01 // TENTANG SAYA</h2>
-                            <p class="bio-text" data-en="Based in Tangerang, Banten. I approach frontend development not just as a coding task, but as an engineering discipline. I believe in writing code that is as elegant under the hood as the interface it produces." data-id="Berbasis di Tangerang, Banten. Saya mendekati pengembangan frontend bukan sekadar tugas pengkodean, melainkan disiplin rekayasa. Saya percaya pada penulisan kode yang sama elegannya di belakang layar dengan antarmuka yang dihasilkannya.">
-                                Berbasis di Tangerang, Banten. Saya mendekati pengembangan frontend bukan sekadar tugas pengkodean, melainkan disiplin rekayasa. Saya percaya pada penulisan kode yang sama elegannya di belakang layar dengan antarmuka yang dihasilkannya.
+                            <p class="bio-text" data-en="Based in Tangerang. I love tinkering with visual web experiences. For me, frontend isn't just about fixing layouts, but figuring out how to make visitors stay without making them wait for long load times." data-id="Saya tinggal di Tangerang dan suka banget ngulik hal-hal seputar web visual. Buat saya, frontend itu bukan cuma soal ngerapiin layout, tapi gimana caranya bikin pengunjung betah tanpa harus nunggu loading lama.">
+                                Saya tinggal di Tangerang dan suka banget ngulik hal-hal seputar web visual. Buat saya, frontend itu bukan cuma soal ngerapiin layout, tapi gimana caranya bikin pengunjung betah tanpa harus nunggu loading lama.
                             </p>
                             <a href="ats-cv.html?download=true" class="cv-link interactive-hover">
                                 <svg width="16" height="16"><use href="#icon-download"></use></svg>
@@ -346,31 +346,29 @@
                         </div>
 
                         <!-- Project 3 -->
-                        <div class="h-project-card" style="cursor: pointer;" onclick="alert('Link project Weather Dash belum lu kasih ke gw Bro. Nanti ganti link-nya di index.html ya!')">
+                        <div class="h-project-card" style="cursor: help;" onclick="alert('Ini adalah proyek backend / Node.js yang berjalan di lokal/server, sehingga tidak ada live demo UI.')">
                             <div class="h-card-image-wrap">
-                                <img src="assets/weather.png" alt="Weather Dash" loading="lazy">
-                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-gradient" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);"></div>
                                 <div class="h-card-overlay-top">
-                                    <span class="h-card-tag">API / JS / Chart.js</span>
+                                    <span class="h-card-tag">Node.js / AI / FFmpeg</span>
                                 </div>
                                 <div class="h-card-info">
-                                    <h3 data-en="Weather Dash" data-id="Weather Dash">Weather Dash</h3>
-                                    <p data-en="REST API integration dashboard displaying real-time weather data." data-id="Dasbor integrasi REST API yang menampilkan data cuaca real-time.">Dasbor integrasi REST API yang menampilkan data cuaca real-time.</p>
+                                    <h3 data-en="Faceless YT Shorts Bot" data-id="Bot YT Shorts Otomatis">Bot YT Shorts Otomatis</h3>
+                                    <p data-en="Automated YouTube Shorts generator using FFmpeg, Google GenAI, and VideoDB." data-id="Generator video YouTube Shorts otomatis menggunakan FFmpeg, Google GenAI, dan VideoDB.">Generator video YouTube Shorts otomatis menggunakan FFmpeg, Google GenAI, dan VideoDB.</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Project 4 -->
-                        <div class="h-project-card" style="cursor: pointer;" onclick="alert('Link project Tasker belum lu kasih ke gw Bro. Nanti ganti link-nya di index.html ya!')">
+                        <div class="h-project-card" style="cursor: help;" onclick="alert('Ini adalah proyek backend / Node.js yang berjalan di lokal/server, sehingga tidak ada live demo UI.')">
                             <div class="h-card-image-wrap">
-                                <img src="assets/tasker.png" alt="Tasker (CRUD)" loading="lazy">
-                                <div class="h-card-overlay-gradient"></div>
+                                <div class="h-card-overlay-gradient" style="background: linear-gradient(135deg, #09090b 0%, #1e1e1e 100%);"></div>
                                 <div class="h-card-overlay-top">
-                                    <span class="h-card-tag">React / LocalStorage</span>
+                                    <span class="h-card-tag">Node.js / WA-Web.js / AI</span>
                                 </div>
                                 <div class="h-card-info">
-                                    <h3 data-en="Tasker (CRUD)" data-id="Tasker (CRUD)">Tasker (CRUD)</h3>
-                                    <p data-en="A minimalist task management application demonstrating state management." data-id="Aplikasi manajemen tugas minimalis yang mendemonstrasikan state management.">Aplikasi manajemen tugas minimalis yang mendemonstrasikan state management.</p>
+                                    <h3 data-en="WhatsApp AI Auto-Reply" data-id="Bot WA Auto-Reply AI">Bot WA Auto-Reply AI</h3>
+                                    <p data-en="Intelligent WhatsApp auto-reply bot powered by AI and whatsapp-web.js." data-id="Bot cerdas untuk balasan WhatsApp otomatis ditenagai AI dan whatsapp-web.js.">Bot cerdas untuk balasan WhatsApp otomatis ditenagai AI dan whatsapp-web.js.</p>
                                 </div>
                             </div>
                         </div>
@@ -412,7 +410,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
     <!-- Custom Main Script (Targeting 800 lines of complex logic) -->
-    <script src="main.js" defer></script>
+    <script src="main.js?v=4" defer></script>
 
 </body>
 </html>

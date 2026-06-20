@@ -65,6 +65,93 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================
+    // 1.2 "WOW" EFFECT: SPOTLIGHT & 3D TILT
+    // ==========================================
+    const heroSection = document.querySelector('.section-hero');
+    const heroTextWrap = document.querySelector('.hero-text');
+    
+    if (heroSection && heroTextWrap && window.innerWidth > 768) {
+        heroSection.addEventListener('mousemove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            // Spotlight Variables
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            heroSection.style.setProperty('--mouse-x', `${x}px`);
+            heroSection.style.setProperty('--mouse-y', `${y}px`);
+
+            // 3D Tilt Variables
+            const xNorm = (x / rect.width) - 0.5; // -0.5 to 0.5
+            const yNorm = (y / rect.height) - 0.5; // -0.5 to 0.5
+            gsap.to(heroTextWrap, {
+                rotationY: xNorm * 15, // max 15deg tilt
+                rotationX: -yNorm * 15, // max 15deg tilt
+                transformPerspective: 1000,
+                transformOrigin: "center center",
+                ease: "power2.out",
+                duration: 0.5
+            });
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            gsap.to(heroTextWrap, {
+                rotationY: 0,
+                rotationX: 0,
+                ease: "power3.out",
+                duration: 1
+            });
+        });
+    }
+
+    // ==========================================
+    // 1.5 MAGNETIC BUTTONS & GLITCH TEXT
+    // ==========================================
+    // Magnetic Hover Logic
+    document.querySelectorAll('.nav-link, .cv-link, .lang-btn, .brand-name').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            if(window.innerWidth <= 768) return; // Disable on mobile
+            const rect = btn.getBoundingClientRect();
+            const h = rect.width / 2;
+            const w = rect.height / 2;
+            const x = e.clientX - rect.left - h;
+            const y = e.clientY - rect.top - w;
+            gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: "power2.out" });
+        });
+        btn.addEventListener('mouseleave', () => {
+            if(window.innerWidth <= 768) return; // Disable on mobile
+            gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)" });
+        });
+    });
+
+    // Lightweight Text Glitch/Scramble Effect
+    const glitchChars = '!<>-_\\/[]{}—=+*^?#________';
+    document.querySelectorAll('.brand-name, .nav-link').forEach(el => {
+        const originalText = el.innerText;
+        el.addEventListener('mouseenter', () => {
+            // Hanya jalankan jika bukan tampilan mobile untuk performa
+            if(window.innerWidth > 768) {
+                let iteration = 0;
+                clearInterval(el.dataset.scrambleInterval);
+                el.dataset.scrambleInterval = setInterval(() => {
+                    el.innerText = originalText.split('').map((letter, index) => {
+                        if(index < iteration) { return originalText[index]; }
+                        return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                    }).join('');
+                    if(iteration >= originalText.length) { 
+                        clearInterval(el.dataset.scrambleInterval);
+                        el.innerText = originalText;
+                    }
+                    iteration += 1 / 2;
+                }, 30);
+            }
+        });
+        // Pastikan teks kembali normal saat leave jika interval belum selesai
+        el.addEventListener('mouseleave', () => {
+            clearInterval(el.dataset.scrambleInterval);
+            el.innerText = originalText;
+        });
+    });
+
+    // ==========================================
     // 2. SMOOTH SCROLL (LENIS)
     // ==========================================
     const lenis = new Lenis({

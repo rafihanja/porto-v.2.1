@@ -543,10 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 requestAnimationFrame(animateShader);
             }
             animateShader();
-        } else {
-            // Fallback for mobile to save battery and boost Lighthouse score
-            container.style.background = 'radial-gradient(circle at top left, #1a1a2e 0%, #050505 100%)';
-        }
+
     } catch (e) {
         console.warn("WebGL blocked or unsupported, falling back to basic background:", e);
         container.style.background = 'radial-gradient(circle at top left, #1a1a2e 0%, #050505 100%)';

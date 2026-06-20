@@ -791,11 +791,16 @@ body.hovering .cursor-ring {
     .preloader-status { font-size: 0.8rem; }
     
     /* Projects Cards Mobile */
-    .h-project-card { width: 90vw; height: 65vh; }
+    .h-project-card { width: 85vw; height: 450px; }
     .h-card-info { left: 20px; right: 20px; bottom: 20px; }
-    .h-card-info h3 { font-size: 2rem; }
+    .h-card-info h3 { font-size: 1.8rem; }
     .h-card-info p { font-size: 0.95rem; }
     .h-card-overlay-top { top: 20px; left: 20px; }
+    
+    /* Timeline Mobile Fix */
+    .timeline-content { opacity: 1; }
+    .time-title { color: var(--color-text); }
+    .time-desc { color: #e4e4e7; }
     
     /* Global spacing */
     :root {

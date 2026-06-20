@@ -769,7 +769,8 @@ body.hovering .cursor-ring {
 
 @media (max-width: 768px) {
     /* Header & Nav */
-    .header-inner { flex-direction: column; gap: 15px; }
+    .site-header { padding: 15px 5vw; }
+    .header-inner { flex-direction: column; gap: 8px; }
     .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
     .brand { text-align: center; }
     

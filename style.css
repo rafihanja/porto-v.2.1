@@ -773,8 +773,12 @@ body.hovering .cursor-ring {
     .brand { text-align: center; }
     
     /* Typography adjustments */
-    .elegant-heading { font-size: 15vw; line-height: 1; }
-    .hero-desc { font-size: 1rem; }
+    .elegant-heading { 
+        font-size: clamp(1.8rem, 8vw, 2.5rem); 
+        line-height: 1.2; 
+        margin-top: 20px;
+    }
+    .hero-desc { font-size: 1rem; margin-top: 15px; }
     .section-title { font-size: 2rem; }
     
     /* Disable Custom Cursor on Mobile */

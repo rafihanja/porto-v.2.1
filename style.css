@@ -318,6 +318,9 @@ body.hovering .cursor-ring {
     border: 1px solid transparent;
     pointer-events: none; /* Biar sisa area header tidak menutupi klik konten di bawahnya */
 }
+.header-inner.scrolled:not(.expanded) .brand-spacer {
+    flex-grow: 1; /* Mendorong brand ke ujung kanan */
+}
 .header-inner.scrolled:not(.expanded) .brand {
     opacity: 0.3;
     pointer-events: auto; /* Hanya nama yang bisa diklik / di-hover */
@@ -329,6 +332,15 @@ body.hovering .cursor-ring {
 }
 .header-inner:hover {
     opacity: 1 !important;
+}
+.brand-wrap {
+    display: flex;
+    flex-grow: 1;
+    overflow: visible;
+}
+.brand-spacer {
+    flex-grow: 0;
+    transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .brand {
     display: flex; flex-direction: column;

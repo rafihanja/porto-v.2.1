@@ -313,22 +313,19 @@ body.hovering .cursor-ring {
 }
 /* States for Scroll Merge Interaction */
 .header-inner.scrolled:not(.expanded) {
-    max-width: fit-content;
-    padding: 8px 20px;
-    background: rgba(24, 24, 27, 0.15); /* Sangat transparan / samar */
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.02);
-    cursor: pointer;
-    opacity: 0.3;
-    /* Geser ke kanan (45vw dari tengah) & perkecil ukuran */
-    transform: translateX(calc(45vw - 50%)) scale(0.85);
+    background: transparent;
+    backdrop-filter: none;
+    border: 1px solid transparent;
+    pointer-events: none; /* Biar sisa area header tidak menutupi klik konten di bawahnya */
 }
-.header-inner.scrolled:not(.expanded):hover {
+.header-inner.scrolled:not(.expanded) .brand {
+    opacity: 0.3;
+    pointer-events: auto; /* Hanya nama yang bisa diklik / di-hover */
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+.header-inner.scrolled:not(.expanded) .brand:hover {
     opacity: 1;
-    background: rgba(24, 24, 27, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    transform: translateX(calc(45vw - 50%)) scale(1);
 }
 .header-inner:hover {
     opacity: 1 !important;

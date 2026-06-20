@@ -453,10 +453,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================
     const container = document.getElementById('webgl-container');
     try {
-        if (window.innerWidth > 768) {
-            const scene = new THREE.Scene();
-            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        
+        // Optimize pixel ratio for mobile to maintain 60fps
+        renderer.setPixelRatio(window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio, 2));
             
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
@@ -508,14 +510,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     uv.y += scroll * 0.001; 
                     
                     float n = snoise(vec2(uv.x * 2.0 + time * 0.1, uv.y * 2.0 - time * 0.05));
-                    float n2 = snoise(vec2(uv.x * 4.0 - time * 0.2, uv.y * 4.0 + time * 0.1));
-                    
-                    float finalNoise = n * 0.5 + n2 * 0.5;
                     
                     vec3 color1 = vec3(0.03, 0.03, 0.04);
                     vec3 color2 = vec3(0.1, 0.15, 0.25);
                     
-                    vec3 finalColor = mix(color1, color2, finalNoise + 0.5);
+                    vec3 finalColor = mix(color1, color2, n * 0.5 + 0.5);
                     gl_FragColor = vec4(finalColor, 1.0);
                 }
             `;

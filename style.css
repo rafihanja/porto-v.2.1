@@ -309,7 +309,16 @@ body.hovering .cursor-ring {
     border-radius: 50px;
     background: transparent;
     border: 1px solid transparent;
-    transition: opacity 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* smooth transition */
+}
+/* States for Scroll Merge Interaction */
+.header-inner.scrolled:not(.expanded) {
+    max-width: fit-content;
+    padding: 10px 25px;
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
 }
 .header-inner:hover {
     opacity: 1 !important;
@@ -324,10 +333,28 @@ body.hovering .cursor-ring {
     font-size: 0.75rem; color: var(--color-text-muted);
     font-family: var(--font-mono); text-transform: uppercase;
     letter-spacing: 1px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: left center;
+}
+.header-inner.scrolled:not(.expanded) .brand-role {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    font-size: 0;
 }
 
 .nav-links {
     display: flex; gap: var(--space-lg); align-items: center;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    white-space: nowrap;
+}
+.header-inner.scrolled:not(.expanded) .nav-links {
+    max-width: 0;
+    opacity: 0;
+    gap: 0;
+    margin-left: 0;
+    pointer-events: none;
 }
 .nav-link {
     font-size: 0.9rem; font-weight: 500;

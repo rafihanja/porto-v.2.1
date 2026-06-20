@@ -15,17 +15,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Prevent initial flicker before preloader finishes
     gsap.set(['.elegant-heading .line', '.hero-desc .line', '.terminal-ui', '.site-header'], { opacity: 0 });
 
-    // Floating Pill Header on Scroll with Scrub
-    gsap.to('.header-inner', {
-        scrollTrigger: {
-            trigger: 'body',
-            start: "50px top",
-            end: "250px top",
-            scrub: 1
-        },
-        maxWidth: "600px", // Gathers them to the center
-        opacity: 0.4, // Makes it transparent and not too visible
-        padding: "10px 25px"
+    // Scroll Merge Interaction for Header
+    const headerInner = document.querySelector('.header-inner');
+    
+    ScrollTrigger.create({
+        trigger: 'body',
+        start: "100px top",
+        onEnter: () => headerInner.classList.add('scrolled'),
+        onLeaveBack: () => {
+            headerInner.classList.remove('scrolled');
+            headerInner.classList.remove('expanded');
+        }
     });
 
     gsap.to('.site-header', {
@@ -36,6 +36,18 @@ document.addEventListener("DOMContentLoaded", () => {
             scrub: 1
         },
         paddingTop: "15px"
+    });
+
+    // Expand header on click when scrolled
+    let expandTimeout;
+    headerInner.addEventListener('click', () => {
+        if (headerInner.classList.contains('scrolled')) {
+            headerInner.classList.add('expanded');
+            clearTimeout(expandTimeout);
+            expandTimeout = setTimeout(() => {
+                headerInner.classList.remove('expanded');
+            }, 3000);
+        }
     });
 
     // Custom Cursor

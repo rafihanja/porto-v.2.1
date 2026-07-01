@@ -499,7 +499,6 @@ document.addEventListener("DOMContentLoaded", () => {
             uniform vec2 resolution;
             uniform float scroll;
             uniform float velocity;
-            uniform vec2 uMouse;
             varying vec2 vUv;
 
             // Highly optimized 2D Value Noise
@@ -534,27 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec2 p = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
                 
-                // Map mouse coordinates to screen space
-                vec2 m = (uMouse * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
-                m.y = -m.y; // Correct WebGL Y-axis orientation
-                
                 float t = time * 0.15;
-                
-                // Swirling vortex mouse attraction (swirls coordinates near cursor)
-                float distToMouse = length(p - m);
-                if (distToMouse < 0.9) {
-                    float strength = (1.0 - distToMouse / 0.9) * 0.45;
-                    float angle = strength * 3.14159;
-                    float cosA = cos(angle);
-                    float sinA = sin(angle);
-                    mat2 rotMouse = mat2(cosA, -sinA, sinA, cosA);
-                    p = rotMouse * (p - m) + m;
-                }
-                
-                // Wave distortion based on velocity and scroll speed
-                float deform = sin(p.x * 2.5 + time * 0.3) * (velocity * 0.015);
-                p.y += scroll * 0.0004 + deform;
-                p.x += deform;
                 
                 // Procedural Fluid Domain Warping
                 // q: First level coordinate warp
@@ -587,7 +566,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 vec3 finalColor = mix(bgColor, inkColor, clamp(f * f * 2.6, 0.0, 1.0));
                 
                 // Smooth grid pattern overlay
-                vec2 gridUv = fract(uv * 15.0 + vec2(0.0, scroll * 0.0001));
+                vec2 gridUv = fract(uv * 15.0);
                 float lineX = smoothstep(0.012, 0.0, abs(gridUv.x - 0.5));
                 float lineY = smoothstep(0.012, 0.0, abs(gridUv.y - 0.5));
                 float gridPattern = max(lineX, lineY);
@@ -605,14 +584,8 @@ document.addEventListener("DOMContentLoaded", () => {
             time: { value: 0 },
             resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
             scroll: { value: 0 },
-            velocity: { value: 0 },
-            uMouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) }
+            velocity: { value: 0 }
         };
-
-        // Track normalized coordinates for WebGL fluid smoke shader vortex
-        window.addEventListener('mousemove', (e) => {
-            uniforms.uMouse.value.set(e.clientX, e.clientY);
-        });
 
         const geometry = new THREE.PlaneGeometry(2, 2);
         const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms });

@@ -427,12 +427,50 @@ body.hovering .cursor-ring {
     filter: drop-shadow(0 0 8px var(--color-accent));
 }
 
-/* Performance Mode body classes */
+/* Performance Mode body classes and CRT synthwave grid */
 body.perf-mode #webgl-container {
     opacity: 0 !important;
 }
 body.perf-mode #particle-canvas {
     opacity: 0 !important;
+}
+
+.perf-grid-overlay {
+    position: fixed;
+    bottom: -10%; left: 0;
+    width: 100vw; height: 50vh;
+    background-image: 
+        linear-gradient(rgba(168, 85, 247, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.15) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center bottom;
+    transform: perspective(220px) rotateX(75deg);
+    transform-origin: bottom center;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    z-index: -3;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body.perf-mode .perf-grid-overlay {
+    opacity: 0.7;
+    animation: gridScroll 12s linear infinite;
+}
+
+body.perf-mode {
+    background-color: #030306;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 45%);
+    background-size: 100% 100%;
+    transition: background 0.8s ease-in-out;
+}
+
+@keyframes gridScroll {
+    0% { background-position: center 0; }
+    100% { background-position: center 600px; }
 }
 
 /* --------------------------------------------------------------------------

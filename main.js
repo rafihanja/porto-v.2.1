@@ -245,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.body.classList.remove('loading-state');
                     lenis.start();
                     initHero();
+                    initOverlappingSections();
                 }
             });
             tl.to('.preloader-content-huge', { opacity: 0, scale: 0.9, duration: 0.3, ease: "power2.inOut" }, 0)
@@ -429,6 +430,59 @@ document.addEventListener("DOMContentLoaded", () => {
             onLeaveBack: () => node.classList.remove('active')
         });
     });
+
+    // ==========================================
+    // GSAP 3D OVERLAPPING SECTIONS & SCROLL VELOCITY SKEW
+    // ==========================================
+    function initOverlappingSections() {
+        const panels = gsap.utils.toArray('.section-hero, .section-about, .section-journey');
+        
+        // Set 3D perspective on smooth-content wrapper to enable spatial depth scale transitions
+        gsap.set('#smooth-content', { perspective: 1200 });
+
+        panels.forEach((panel, i) => {
+            // Pin the panel as user scrolls down, making the next panel slide up over it
+            ScrollTrigger.create({
+                trigger: panel,
+                start: "top top",
+                end: "bottom top",
+                pin: true,
+                pinSpacing: false,
+                scrub: true,
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    gsap.set(panel, {
+                        scale: 1 - progress * 0.08,
+                        opacity: 1 - progress * 0.75,
+                        yPercent: -progress * 6,
+                        transformOrigin: "center top"
+                    });
+                }
+            });
+        });
+
+        // Dynamic Scroll Velocity Skew & scaleY stretching
+        let skewSetter = gsap.quickTo(panels, "skewY"),
+            scaleYSetter = gsap.quickTo(panels, "scaleY"),
+            clampSkew = gsap.utils.clamp(-5, 5),
+            clampScale = gsap.utils.clamp(0.95, 1.05);
+
+        ScrollTrigger.create({
+            onUpdate: (self) => {
+                if (isPerfMode) {
+                    skewSetter(0);
+                    scaleYSetter(1);
+                    return;
+                }
+                const velocity = self.getVelocity();
+                const skew = clampSkew(velocity / -350);
+                const scaleY = clampScale(1 + Math.abs(velocity) * 0.00004);
+                skewSetter(skew);
+                scaleYSetter(scaleY);
+            }
+        });
+    }
 
     // ==========================================
     // 8. HORIZONTAL SCROLL PROJECTS

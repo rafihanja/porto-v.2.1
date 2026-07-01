@@ -129,16 +129,7 @@ body.hovering .cursor-ring {
     transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-#particle-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100dvh;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.6;
-    will-change: transform;
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-}
+
 
 /* ==========================================================================
    3. PRELOADER
@@ -429,9 +420,6 @@ body.hovering .cursor-ring {
 
 /* Performance Mode body classes and CRT synthwave grid */
 body.perf-mode #webgl-container {
-    opacity: 0 !important;
-}
-body.perf-mode #particle-canvas {
     opacity: 0 !important;
 }
 

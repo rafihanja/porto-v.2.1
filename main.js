@@ -499,9 +499,10 @@ document.addEventListener("DOMContentLoaded", () => {
             uniform vec2 resolution;
             uniform float scroll;
             uniform float velocity;
+            uniform vec2 uMouse;
             varying vec2 vUv;
 
-            // Highly optimized 2D Value Noise (Zero logical branches)
+            // Highly optimized 2D Value Noise
             float noise(in vec2 p) {
                 vec2 i = floor(p);
                 vec2 f = fract(p);
@@ -515,13 +516,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return mix(mix(fract(a), fract(b), u.x), mix(fract(c), fract(d), u.x), u.y);
             }
 
-            // High-speed 2-octave FBM for volumetric gas effect
+            // High-speed FBM for detailed smoke texture
             float fbm(in vec2 p) {
                 float v = 0.0;
                 float a = 0.5;
                 vec2 shift = vec2(100.0);
                 mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
-                for (int i = 0; i < 2; ++i) {
+                for (int i = 0; i < 3; ++i) {
                     v += a * noise(p);
                     p = rot * p * 2.0 + shift;
                     a *= 0.5;
@@ -533,39 +534,68 @@ document.addEventListener("DOMContentLoaded", () => {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec2 p = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
                 
-                // Plasma distortion for liquid-like organic movement with zero GPU lag
+                // Map mouse coordinates to screen space
+                vec2 m = (uMouse * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+                m.y = -m.y; // Correct WebGL Y-axis orientation
+                
                 float t = time * 0.15;
-                p.x += sin(p.y * 1.5 + t) * 0.4;
-                p.y += cos(p.x * 1.5 - t) * 0.4;
+                
+                // Swirling vortex mouse attraction (swirls coordinates near cursor)
+                float distToMouse = length(p - m);
+                if (distToMouse < 0.9) {
+                    float strength = (1.0 - distToMouse / 0.9) * 0.45;
+                    float angle = strength * 3.14159;
+                    float cosA = cos(angle);
+                    float sinA = sin(angle);
+                    mat2 rotMouse = mat2(cosA, -sinA, sinA, cosA);
+                    p = rotMouse * (p - m) + m;
+                }
                 
                 // Wave distortion based on velocity and scroll speed
-                float deform = sin(p.x * 2.0 + time * 0.3) * (velocity * 0.015);
+                float deform = sin(p.x * 2.5 + time * 0.3) * (velocity * 0.015);
                 p.y += scroll * 0.0004 + deform;
                 p.x += deform;
                 
-                // Calculate FBM layers
-                float n = fbm(p * 0.6);
-                float n2 = fbm(p * 1.2 + n * 0.3);
+                // Procedural Fluid Domain Warping
+                // q: First level coordinate warp
+                vec2 q = vec2(
+                    fbm(p + vec2(0.0, 0.0) + t * 0.4),
+                    fbm(p + vec2(5.2, 1.3) + t * 0.2)
+                );
                 
-                // Glowing HSL-tailored colors (Violet purple and Cyan blue)
-                vec3 col1 = vec3(0.5, 0.15, 0.85); // Purple
-                vec3 col2 = vec3(0.02, 0.45, 0.7);  // Cyan Blue
-                vec3 bgColor = vec3(0.03, 0.03, 0.05); // Base background
+                // r: Second level coordinate warp
+                vec2 r = vec2(
+                    fbm(p + 4.0 * q + vec2(1.7, 9.2) + t * 0.15),
+                    fbm(p + 4.0 * q + vec2(8.3, 2.8) + t * 0.1)
+                );
                 
-                // Blend nebula gas with background
-                vec3 gasColor = mix(col1, col2, n2 * 0.8 + 0.2);
-                vec3 finalColor = mix(bgColor, gasColor, clamp(n * n * 2.2, 0.0, 1.0));
+                // f: Final warped noise output representing fluid smoke density
+                float f = fbm(p + 4.0 * r);
+                
+                // Glowing colors representing neon ink dispersing
+                vec3 colViolet = vec3(0.55, 0.1, 0.9);  // Glowing Violet Purple
+                vec3 colCyan = vec3(0.0, 0.75, 0.85);   // Cyan Blue
+                vec3 bgColor = vec3(0.03, 0.02, 0.05);  // Deep cosmic background
+                
+                // Mix colors based on warp characteristics
+                vec3 inkColor = mix(colViolet, colCyan, clamp(r.x * r.x * 2.0, 0.0, 1.0));
+                
+                // Highlight fluid vortex edges for smoke density depth
+                inkColor += vec3(0.15, 0.35, 0.55) * q.y * 0.4;
+                
+                // Blend final ink dispersion color with deep background
+                vec3 finalColor = mix(bgColor, inkColor, clamp(f * f * 2.6, 0.0, 1.0));
                 
                 // Smooth grid pattern overlay
                 vec2 gridUv = fract(uv * 15.0 + vec2(0.0, scroll * 0.0001));
                 float lineX = smoothstep(0.012, 0.0, abs(gridUv.x - 0.5));
                 float lineY = smoothstep(0.012, 0.0, abs(gridUv.y - 0.5));
                 float gridPattern = max(lineX, lineY);
-                finalColor = mix(finalColor, vec3(0.4, 0.2, 0.7) * 0.15, gridPattern * 0.3);
+                finalColor = mix(finalColor, vec3(0.4, 0.2, 0.7) * 0.1, gridPattern * 0.3);
                 
                 // Vignette
                 float dist = distance(uv, vec2(0.5));
-                finalColor *= (1.0 - dist * 0.8);
+                finalColor *= (1.0 - dist * 0.75);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
             }
@@ -575,8 +605,14 @@ document.addEventListener("DOMContentLoaded", () => {
             time: { value: 0 },
             resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
             scroll: { value: 0 },
-            velocity: { value: 0 }
+            velocity: { value: 0 },
+            uMouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) }
         };
+
+        // Track normalized coordinates for WebGL fluid smoke shader vortex
+        window.addEventListener('mousemove', (e) => {
+            uniforms.uMouse.value.set(e.clientX, e.clientY);
+        });
 
         const geometry = new THREE.PlaneGeometry(2, 2);
         const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms });
@@ -615,104 +651,7 @@ document.addEventListener("DOMContentLoaded", () => {
         container.style.background = 'radial-gradient(circle at top left, #1a1a2e 0%, #050505 100%)';
     }
 
-    // Initialize 2D Particle Canvas
-    if (pCanvas) {
-        const pCtx = pCanvas.getContext('2d');
-        const particles = [];
-        const particleCount = window.innerWidth <= 768 ? 20 : 55;
 
-        const resizeParticles = () => {
-            pCanvas.width = window.innerWidth;
-            pCanvas.height = window.innerHeight;
-        };
-        resizeParticles();
-        window.addEventListener('resize', resizeParticles);
-
-        // Populate particles
-        for (let i = 0; i < particleCount; i++) {
-            const vx = (Math.random() - 0.5) * 0.5;
-            const vy = (Math.random() - 0.5) * 0.5;
-            particles.push({
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                vx: vx,
-                vy: vy,
-                baseVx: vx,
-                baseVy: vy,
-                radius: Math.random() * 1.5 + 1.2,
-                opacity: Math.random() * 0.4 + 0.3
-            });
-        }
-
-        animateParticles = function() {
-            if (isPerfMode) return;
-            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-
-            const w = pCanvas.width;
-            const h = pCanvas.height;
-
-            // Update and draw particles
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                
-                // Mouse attraction (springy magnetic orbital pull)
-                const dx = mouse.x - p.x;
-                const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 180 && window.innerWidth > 768) {
-                    const force = (1.0 - dist / 180) * 0.08;
-                    p.vx += (dx / dist) * force;
-                    p.vy += (dy / dist) * force;
-                } else {
-                    // Drift back toward original base speed/direction slowly
-                    p.vx += (p.baseVx - p.vx) * 0.04;
-                    p.vy += (p.baseVy - p.vy) * 0.04;
-                }
-
-                // Damping to prevent particle speed runaway
-                p.vx *= 0.96;
-                p.vy *= 0.96;
-
-                p.x += p.vx;
-                p.y += p.vy - scrollData.velocity * 0.25;
-
-                // Bounce boundaries for horizontal axis, infinite wrap-around for vertical scroll axis
-                if (p.x < 0) { p.x = 0; p.vx *= -1; p.baseVx *= -1; }
-                else if (p.x > w) { p.x = w; p.vx *= -1; p.baseVx *= -1; }
-                if (p.y < 0) { p.y = h; }
-                else if (p.y > h) { p.y = 0; }
-
-                // Draw particle
-                pCtx.beginPath();
-                pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                pCtx.fillStyle = `rgba(168, 85, 247, ${p.opacity})`;
-                pCtx.fill();
-            }
-
-            // Draw connection lines
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const p1 = particles[i];
-                    const p2 = particles[j];
-                    const dx = p1.x - p2.x;
-                    const dy = p1.y - p2.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 110) {
-                        const alpha = (1.0 - dist / 110) * 0.12;
-                        pCtx.strokeStyle = `rgba(6, 182, 212, ${alpha})`;
-                        pCtx.lineWidth = 0.6;
-                        pCtx.beginPath();
-                        pCtx.moveTo(p1.x, p1.y);
-                        pCtx.lineTo(p2.x, p2.y);
-                        pCtx.stroke();
-                    }
-                }
-            }
-
-            particleAnimId = requestAnimationFrame(animateParticles);
-        };
-        animateParticles();
-    }
 
     // ==========================================
     // 10. BILINGUAL SYSTEM

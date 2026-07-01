@@ -499,86 +499,29 @@ document.addEventListener("DOMContentLoaded", () => {
             uniform float velocity;
             varying vec2 vUv;
 
-            // Ashima Arts 3D Simplex Noise (MIT License)
-            vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-            vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-
-            float snoise(vec3 v){ 
-              const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
-              const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
-
-              // First corner
-              vec3 i  = floor(v + dot(v, C.yyy) );
-              vec3 x0 =   v - i + dot(i, C.xxx) ;
-
-              // Other corners
-              vec3 g = step(x0.yzx, x0.xyz);
-              vec3 l = 1.0 - g;
-              vec3 i1 = min( g.xyz, l.zxy );
-              vec3 i2 = max( g.xyz, l.zxy );
-
-              //  x0 = x0 - 0. + 0.0 * C 
-              vec3 x1 = x0 - i1 + 1.0 * C.xxx;
-              vec3 x2 = x0 - i2 + 2.0 * C.xxx;
-              vec3 x3 = x0 - D.yyy;      // -0.5 = -1.0 + 3.0 * C.xxx
-
-              // Permutations
-              i = mod(i, 289.0 ); 
-              vec4 p = permute( permute( permute( 
-                         i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-                       + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
-                       + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-
-              // Gradients
-              float n_ = 1.0/7.0; // N=7
-              vec3  ns = n_ * D.wyz - D.xzx;
-
-              vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
-
-              vec4 x_ = floor(j * ns.z);
-              vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
-
-              vec4 x = x_ *ns.x + ns.yyyy;
-              vec4 y = y_ *ns.x + ns.yyyy;
-              vec4 h = 1.0 - abs(x) - abs(y);
-
-              vec4 b0 = vec4( x.xy, y.xy );
-              vec4 b1 = vec4( x.zw, y.zw );
-
-              vec4 s0 = floor(b0)*2.0 + 1.0;
-              vec4 s1 = floor(b1)*2.0 + 1.0;
-              vec4 sh = -step(h, vec4(0.0));
-
-              vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-              vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
-
-              vec3 p0 = vec3(a0.xy,h.x);
-              vec3 p1 = vec3(a0.zw,h.y);
-              vec3 p2 = vec3(a1.xy,h.z);
-              vec3 p3 = vec3(a1.zw,h.w);
-
-              // Normalise gradients
-              vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-              p0 *= norm.x;
-              p1 *= norm.y;
-              p2 *= norm.z;
-              p3 *= norm.w;
-
-              // Mix final noise value
-              vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-              m = m * m;
-              return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
-                                            dot(p2,x2), dot(p3,x3) ) );
+            // Highly optimized 2D Value Noise (Zero logical branches)
+            float noise(in vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                vec2 u = f * f * (3.0 - 2.0 * f);
+                
+                float a = sin(dot(i + vec2(0.0, 0.0), vec2(127.1, 311.7))) * 43758.5453123;
+                float b = sin(dot(i + vec2(1.0, 0.0), vec2(127.1, 311.7))) * 43758.5453123;
+                float c = sin(dot(i + vec2(0.0, 1.0), vec2(127.1, 311.7))) * 43758.5453123;
+                float d = sin(dot(i + vec2(1.0, 1.0), vec2(127.1, 311.7))) * 43758.5453123;
+                
+                return mix(mix(fract(a), fract(b), u.x), mix(fract(c), fract(d), u.x), u.y);
             }
 
-            // Fractional Brownian Motion (fBm) using 3D Simplex Noise
-            float fbm(in vec3 p) {
+            // High-speed 2-octave FBM for volumetric gas effect
+            float fbm(in vec2 p) {
                 float v = 0.0;
                 float a = 0.5;
-                vec3 shift = vec3(100.0);
-                for (int i = 0; i < 4; ++i) {
-                    v += a * snoise(p);
-                    p = p * 2.0 + shift;
+                vec2 shift = vec2(100.0);
+                mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
+                for (int i = 0; i < 2; ++i) {
+                    v += a * noise(p);
+                    p = rot * p * 2.0 + shift;
                     a *= 0.5;
                 }
                 return v;
@@ -588,14 +531,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec2 p = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
                 
+                // Plasma distortion for liquid-like organic movement with zero GPU lag
+                float t = time * 0.15;
+                p.x += sin(p.y * 1.5 + t) * 0.4;
+                p.y += cos(p.x * 1.5 - t) * 0.4;
+                
                 // Wave distortion based on velocity and scroll speed
                 float deform = sin(p.x * 2.0 + time * 0.3) * (velocity * 0.015);
                 p.y += scroll * 0.0004 + deform;
                 p.x += deform;
                 
-                // Calculate 3D fBm noise layers for organic nebula morphing (Z-axis is time)
-                float n = fbm(vec3(p * 0.8, time * 0.08));
-                float n2 = fbm(vec3(p * 1.5, -time * 0.05 + n * 0.5));
+                // Calculate FBM layers
+                float n = fbm(p * 0.6);
+                float n2 = fbm(p * 1.2 + n * 0.3);
                 
                 // Glowing HSL-tailored colors (Violet purple and Cyan blue)
                 vec3 col1 = vec3(0.5, 0.15, 0.85); // Purple
@@ -611,7 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 float lineX = smoothstep(0.012, 0.0, abs(gridUv.x - 0.5));
                 float lineY = smoothstep(0.012, 0.0, abs(gridUv.y - 0.5));
                 float gridPattern = max(lineX, lineY);
-                finalColor = mix(finalColor, vec3(0.4, 0.2, 0.7) * 0.2, gridPattern * 0.3);
+                finalColor = mix(finalColor, vec3(0.4, 0.2, 0.7) * 0.15, gridPattern * 0.3);
                 
                 // Vignette
                 float dist = distance(uv, vec2(0.5));
@@ -1401,16 +1349,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.body.classList.add('perf-mode');
                 perfBtn.classList.add('active');
                 
-                // Cancel active animations to prevent duplicate render threads
-                if (shaderAnimId) cancelAnimationFrame(shaderAnimId);
-                if (particleAnimId) cancelAnimationFrame(particleAnimId);
+                // Wait for the 800ms CSS opacity transition to complete smoothly
+                // while animation is still running, then halt loops and clear canvas
+                setTimeout(() => {
+                    if (isPerfMode) {
+                        if (shaderAnimId) cancelAnimationFrame(shaderAnimId);
+                        if (particleAnimId) cancelAnimationFrame(particleAnimId);
 
-                // Clear the particle canvas dynamically to save resources
-                const pCanvas = document.getElementById('particle-canvas');
-                if (pCanvas) {
-                    const pCtx = pCanvas.getContext('2d');
-                    pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-                }
+                        const pCanvas = document.getElementById('particle-canvas');
+                        if (pCanvas) {
+                            const pCtx = pCanvas.getContext('2d');
+                            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+                        }
+                    }
+                }, 800);
             } else {
                 document.body.classList.remove('perf-mode');
                 perfBtn.classList.remove('active');

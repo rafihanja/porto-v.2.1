@@ -126,6 +126,7 @@ body.hovering .cursor-ring {
     z-index: -2;
     pointer-events: none;
     opacity: 0.4; /* Subtle background */
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 #particle-canvas {
@@ -136,6 +137,7 @@ body.hovering .cursor-ring {
     pointer-events: none;
     opacity: 0.6;
     will-change: transform;
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* ==========================================================================
@@ -427,7 +429,10 @@ body.hovering .cursor-ring {
 
 /* Performance Mode body classes */
 body.perf-mode #webgl-container {
-    display: none !important;
+    opacity: 0 !important;
+}
+body.perf-mode #particle-canvas {
+    opacity: 0 !important;
 }
 
 /* --------------------------------------------------------------------------

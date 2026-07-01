@@ -2,15 +2,50 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rafih Anja | Interactive Developer</title>
+    <meta name="description" content="Portofolio interaktif Rafih Anja, Junior Frontend Developer. Menampilkan karya koding kreatif dengan animasi GSAP, Tailwind CSS, dan desain web premium.">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://portfolio-rafih.vercel.app/">
+    <meta property="og:title" content="Rafih Anja | Interactive Developer">
+    <meta property="og:description" content="Portofolio interaktif Rafih Anja, Junior Frontend Developer. Menampilkan karya koding kreatif dengan animasi GSAP, Tailwind CSS, dan desain web premium.">
+    <meta property="og:image" content="assets/profile.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://portfolio-rafih.vercel.app/">
+    <meta property="twitter:title" content="Rafih Anja | Interactive Developer">
+    <meta property="twitter:description" content="Portofolio interaktif Rafih Anja, Junior Frontend Developer. Menampilkan karya koding kreatif dengan animasi GSAP, Tailwind CSS, dan desain web premium.">
+    <meta property="twitter:image" content="assets/profile.jpg">
+
+    <link rel="canonical" href="https://portfolio-rafih.vercel.app/">
+
+    <!-- JSON-LD Structured Data Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Rafih Anja",
+      "jobTitle": "Junior Frontend Developer",
+      "url": "https://portfolio-rafih.vercel.app/",
+      "sameAs": [
+        "https://github.com/rafihanja"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Tangerang",
+        "addressRegion": "Banten",
+        "addressCountry": "Indonesia"
+      }
+    }
+    </script>
+
     <!-- Elegant Fonts: Inter for minimal body, JetBrains Mono for Terminal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style.css?v=19">
     
     <style>
         /* Lenis Native Setup */
@@ -25,6 +60,10 @@
 
     <!-- WebGL Background Container -->
     <div id="webgl-container"></div>
+    <canvas id="particle-canvas"></canvas>
+    
+    <!-- CRT Grid Scanline Overlay (Fase 5) -->
+    <div class="grid-scanline"></div>
 
     <!-- SVGs and Filters (Hidden) -->
     <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +97,7 @@
     <div id="micro-cursor">
         <div class="cursor-dot"></div>
         <div class="cursor-ring"></div>
+        <canvas id="cursor-trail-canvas"></canvas>
     </div>
 
     <!-- Preloader -->
@@ -103,6 +143,11 @@
                     <span class="lang-sep">/</span>
                     <button class="lang-btn en">EN</button>
                 </div>
+                <button class="perf-toggle interactive-hover" id="perf-btn" title="Performance Mode (Toggle WebGL)" aria-label="Toggle Performance Mode">
+                    <svg class="perf-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </button>
             </nav>
         </div>
     </header>
@@ -118,24 +163,24 @@
                     <!-- Hero Typography (Small & Elegant) -->
                     <div class="hero-text">
                         <h1 class="elegant-heading">
-                            <span class="split-lines" data-en="Visuals that tell a story," data-id="Visual yang bercerita,">Visual yang bercerita,</span><br>
-                            <span class="split-lines" data-en="code that works," data-id="kode yang bekerja,">kode yang bekerja,</span><br>
-                            <span class="split-lines" data-en="unforgettable experience." data-id="pengalaman tak terlupa.">pengalaman tak terlupa.</span>
+                            <span class="split-lines" data-en="High-performance," data-id="Antarmuka berkinerja tinggi,">Antarmuka berkinerja tinggi,</span><br>
+                            <span class="split-lines" data-en="interactive interfaces," data-id="interaktif dan dinamis,">interaktif dan dinamis,</span><br>
+                            <span class="split-lines" data-en="buttery smooth motion." data-id="gerakan animasi yang mulus.">gerakan animasi yang mulus.</span>
                         </h1>
-                        <p class="hero-desc split-lines" data-en="Hi! I craft web interfaces using React and GSAP. My focus is simple: creating buttery smooth animations that won't slow down your device." data-id="Halo! Saya biasa bikin tampilan web pakai React dan GSAP. Fokus saya simpel: bikin animasi yang mulus banget tapi nggak bikin HP atau laptop jadi lemot.">
-                            Halo! Saya biasa bikin tampilan web pakai React dan GSAP. Fokus saya simpel: bikin animasi yang mulus banget tapi nggak bikin HP atau laptop jadi lemot.
+                        <p class="hero-desc split-lines" data-en="Hi! I am a Frontend Developer specializing in React and GSAP. I build immersive, spatial web experiences optimized for speed and seamless UX." data-id="Halo! Saya Frontend Developer yang berspesialisasi dalam React dan GSAP. Saya suka membangun halaman web interaktif yang dioptimalkan untuk kecepatan dan kemudahan akses.">
+                            Halo! Saya Frontend Developer yang berspesialisasi dalam React dan GSAP. Saya suka membangun halaman web interaktif yang dioptimalkan untuk kecepatan dan kemudahan akses.
                         </p>
                     </div>
 
-                    <!-- Terminal UI Simulation -->
+                    <!-- Terminal UI Simulation (Fase 6: Interactive CLI) -->
                     <div class="terminal-ui">
                         <div class="term-header">
                             <div class="term-btns">
                                 <span class="t-btn r"></span><span class="t-btn y"></span><span class="t-btn g"></span>
                             </div>
-                            <div class="term-title">rafih_anja ~ bash</div>
+                            <div class="term-title">rafih_anja ~ interactive_sh</div>
                         </div>
-                        <div class="term-body">
+                        <div class="term-body" id="terminal-body-content">
                             <div class="term-line">
                                 <span class="prompt">$</span>
                                 <span class="typing-text" id="typewriter-1" data-id="whoami" data-en="whoami">whoami</span>
@@ -146,10 +191,15 @@
                             </div>
                             <div class="term-line hidden" id="term-line-2">
                                 <span class="prompt">$</span>
-                                <span class="typing-text" id="typewriter-2" data-id="./execute_portfolio.sh" data-en="./execute_portfolio.sh">./execute_portfolio.sh</span>
+                                <span class="typing-text" id="typewriter-2" data-id="cat help_readme.txt" data-en="cat help_readme.txt">cat help_readme.txt</span>
                             </div>
                             <div class="term-line output hidden" id="term-out-2">
-                                <span class="system-msg" data-id="Peringatan: Interaksi terlalu mulus. Memuat..." data-en="Warning: Interactions are too smooth. Loading...">Peringatan: Interaksi terlalu mulus. Memuat...</span>
+                                <span class="system-msg" data-id="Ketik perintah di bawah ini! Ketik 'help' untuk daftar menu." data-en="Type commands below! Type 'help' for command list.">Ketik perintah di bawah ini! Ketik 'help' untuk daftar menu.</span>
+                            </div>
+                            <div class="term-history" id="term-history"></div>
+                            <div class="term-input-line hidden" id="term-input-line">
+                                <span class="prompt">$</span>
+                                <input type="text" id="terminal-cli-input" class="terminal-cli-input" autocomplete="off" spellcheck="false" placeholder="type 'help'..."></input>
                             </div>
                         </div>
                     </div>
@@ -191,60 +241,35 @@
                     <!-- Skills (Low percentages, realistic) -->
                     <div class="about-col-right">
                         <h2 class="section-label" data-en="02 // EXPERTISE" data-id="02 // KEAHLIAN">02 // KEAHLIAN</h2>
-                        <div class="skills-list">
-                            
-                            <!-- Skill 1 -->
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span class="skill-name">React</span>
-                                    <span class="skill-pct">0%</span>
-                                </div>
-                                <div class="skill-track">
-                                    <!-- Junior level 58% -->
-                                    <div class="skill-fill" data-target="58"></div>
-                                </div>
+                        <div class="skills-groups">
+                            <!-- Group 1 -->
+                            <div class="skills-group">
+                                <h3 class="group-title" data-en="Core Stack" data-id="Stack Utama">Stack Utama</h3>
+                                <ul class="skills-text-list">
+                                    <li>React.js / Next.js</li>
+                                    <li>HTML5 / CSS3 / JavaScript (ES6+)</li>
+                                    <li>Tailwind CSS</li>
+                                </ul>
                             </div>
-
-                            <!-- Skill 2 -->
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span class="skill-name">Next.js</span>
-                                    <span class="skill-pct">0%</span>
-                                </div>
-                                <div class="skill-track">
-                                    <!-- Junior level 52% -->
-                                    <div class="skill-fill" data-target="52"></div>
-                                </div>
+                            <!-- Group 2 -->
+                            <div class="skills-group">
+                                <h3 class="group-title" data-en="Motion & Interactive" data-id="Animasi & Interaktif">Animasi & Interaktif</h3>
+                                <ul class="skills-text-list">
+                                    <li>GSAP (GreenSock) / ScrollTrigger</li>
+                                    <li>Three.js (WebGL Shader Background)</li>
+                                    <li>Lenis (Smooth Scroll) / SplitType</li>
+                                </ul>
                             </div>
-
-                            <!-- Skill 3 -->
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span class="skill-name">Tailwind CSS</span>
-                                    <span class="skill-pct">0%</span>
-                                </div>
-                                <div class="skill-track">
-                                    <!-- Junior level 59% -->
-                                    <div class="skill-fill" data-target="59"></div>
-                                </div>
+                            <!-- Group 3 -->
+                            <div class="skills-group">
+                                <h3 class="group-title" data-en="Tools & Ecosystem" data-id="Alat & Ekosistem">Alat & Ekosistem</h3>
+                                <ul class="skills-text-list">
+                                    <li>Git / GitHub</li>
+                                    <li>Vercel / Node.js / npm</li>
+                                    <li>VS Code / Terminal Bash</li>
+                                </ul>
                             </div>
-
-                            <!-- Skill 4 -->
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span class="skill-name">GSAP & Animations</span>
-                                    <span class="skill-pct">0%</span>
-                                </div>
-                                <div class="skill-track">
-                                    <!-- Junior level 55% -->
-                                    <div class="skill-fill" data-target="55"></div>
-                                </div>
-                            </div>
-
                         </div>
-                        <p class="skill-note" data-en="* Percentages represent my self-assessed junior proficiency level relative to senior industry standards." data-id="* Persentase mewakili tingkat kemahiran junior yang saya nilai sendiri relatif terhadap standar industri senior.">
-                            * Persentase mewakili tingkat kemahiran junior yang saya nilai sendiri relatif terhadap standar industri senior.
-                        </p>
                     </div>
 
                 </div>
@@ -316,9 +341,12 @@
                     <div class="horizontal-scroll-container">
                         
                         <!-- Project 1 -->
-                        <div class="h-project-card" style="cursor: pointer;" onclick="window.open('https://project-porto-v1-0.vercel.app/', '_blank')">
+                        <div class="h-project-card" style="cursor: pointer;" data-project="zenith">
                             <div class="h-card-image-wrap">
                                 <img src="assets/zenith.png" alt="Zenith Matcha" loading="lazy">
+                                <svg class="card-border-svg" viewBox="0 0 400 500" preserveAspectRatio="none">
+                                    <rect x="2" y="2" width="396" height="496" rx="20" ry="20" class="card-border-rect"></rect>
+                                </svg>
                                 <div class="h-card-overlay-gradient"></div>
                                 <div class="h-card-overlay-top">
                                     <span class="h-card-tag">Next.js / Tailwind</span>
@@ -331,9 +359,12 @@
                         </div>
 
                         <!-- Project 2 -->
-                        <div class="h-project-card" style="cursor: pointer;" onclick="window.open('https://project-porto-v1-1.vercel.app/', '_blank')">
+                        <div class="h-project-card" style="cursor: pointer;" data-project="zakat">
                             <div class="h-card-image-wrap">
                                 <img src="assets/cek_zakat.png" alt="Cek Zakat" loading="lazy">
+                                <svg class="card-border-svg" viewBox="0 0 400 500" preserveAspectRatio="none">
+                                    <rect x="2" y="2" width="396" height="496" rx="20" ry="20" class="card-border-rect"></rect>
+                                </svg>
                                 <div class="h-card-overlay-gradient"></div>
                                 <div class="h-card-overlay-top">
                                     <span class="h-card-tag">Vue.js / CSS</span>
@@ -346,9 +377,27 @@
                         </div>
 
                         <!-- Project 3 -->
-                        <div class="h-project-card" style="cursor: help;" onclick="alert('Ini adalah proyek backend / Node.js yang berjalan di lokal/server, sehingga tidak ada live demo UI.')">
-                            <div class="h-card-image-wrap">
-                                <div class="h-card-overlay-gradient" style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%);"></div>
+                        <div class="h-project-card" style="cursor: pointer;" data-project="shorts">
+                            <div class="h-card-image-wrap project-card-3d">
+                                <div class="h-card-code-bg">
+                                    <pre class="code-stream-text" id="code-stream-text">
+// YT SHORTS GENERATOR
+const ffmpeg = require('ffmpeg');
+const ai = require('google-genai');
+
+async function buildShort() {
+    const script = await ai.generateScript();
+    const video = await ffmpeg.compile(script);
+    await video.upload({
+        platform: 'youtube'
+    });
+}
+                                    </pre>
+                                </div>
+                                <svg class="card-border-svg" viewBox="0 0 400 500" preserveAspectRatio="none">
+                                    <rect x="2" y="2" width="396" height="496" rx="20" ry="20" class="card-border-rect"></rect>
+                                </svg>
+                                <div class="h-card-overlay-gradient"></div>
                                 <div class="h-card-overlay-top">
                                     <span class="h-card-tag">Node.js / AI / FFmpeg</span>
                                 </div>
@@ -360,9 +409,12 @@
                         </div>
 
                         <!-- Project 4 -->
-                        <div class="h-project-card" style="cursor: pointer;" onclick="window.open('https://ranja-ai.pages.dev/', '_blank')">
+                        <div class="h-project-card" style="cursor: pointer;" data-project="ranja">
                             <div class="h-card-image-wrap">
                                 <img src="assets/ranja_ai.png" alt="Ranja.Ai" loading="lazy">
+                                <svg class="card-border-svg" viewBox="0 0 400 500" preserveAspectRatio="none">
+                                    <rect x="2" y="2" width="396" height="496" rx="20" ry="20" class="card-border-rect"></rect>
+                                </svg>
                                 <div class="h-card-overlay-gradient"></div>
                                 <div class="h-card-overlay-top">
                                     <span class="h-card-tag">Vanilla JS / Serverless / AI</span>
@@ -390,14 +442,57 @@
                     <div class="footer-right">
                         <div class="social-links">
                             <a href="https://github.com/rafihanja" target="_blank" class="interactive-hover">GitHub</a>
-                            <a href="#" class="interactive-hover">LinkedIn</a>
-                            <a href="#" class="interactive-hover">Twitter</a>
                         </div>
                         <p class="copyright">&copy; 2026. <span data-en="Built with code." data-id="Dibangun dengan kode.">Dibangun dengan kode.</span></p>
                     </div>
                 </div>
             </footer>
 
+        </div>
+    </div>
+
+    <!-- Project Detail Modal (Fase 4) -->
+    <div id="project-modal" class="modal-overlay" aria-hidden="true" role="dialog">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card-container">
+            <button class="modal-close-btn interactive-hover" id="modal-close-btn" aria-label="Tutup Detail Proyek">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-content-wrapper">
+                <div class="modal-header">
+                    <span class="modal-tag" id="modal-project-tag">Stack</span>
+                    <h2 class="modal-title" id="modal-project-title">Nama Proyek</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-section">
+                        <h3 class="modal-section-title" data-en="The Challenge" data-id="Tantangan">Tantangan</h3>
+                        <p id="modal-project-problem">Deskripsi tantangan...</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3 class="modal-section-title" data-en="Our Solution" data-id="Solusi Kita">Solusi Kita</h3>
+                        <p id="modal-project-solution">Deskripsi solusi...</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3 class="modal-section-title" data-en="Key Features" data-id="Fitur Utama">Fitur Utama</h3>
+                        <ul id="modal-project-features">
+                            <li>Fitur...</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" target="_blank" class="modal-action-btn github interactive-hover" id="modal-link-github">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span data-en="View Source" data-id="Lihat Kode">Lihat Kode</span>
+                    </a>
+                    <a href="#" target="_blank" class="modal-action-btn live interactive-hover" id="modal-link-live">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span data-en="Live Demo" data-id="Kunjungi Situs">Kunjungi Situs</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -411,7 +506,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
     <!-- Custom Main Script (Targeting 800 lines of complex logic) -->
-    <script src="main.js?v=18" defer></script>
+    <script src="main.js?v=21" defer></script>
 
 </body>
 </html>

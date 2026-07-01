@@ -780,34 +780,38 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.h-project-card').forEach(card => {
         const wrap = card.querySelector('.h-card-image-wrap');
         if (wrap) {
+            let rect = null;
+            
+            // Set up fast quickTo setters to avoid full tween overhead on mousemove
+            const quickRotX = gsap.quickTo(wrap, "rotationX", { duration: 0.4, ease: "power2.out" });
+            const quickRotY = gsap.quickTo(wrap, "rotationY", { duration: 0.4, ease: "power2.out" });
+
             card.addEventListener('mouseenter', () => {
                 startAmbientHum();
+                // Cache bounding box on enter to completely avoid layout thrashing
+                rect = card.getBoundingClientRect();
             });
 
             card.addEventListener('mousemove', (e) => {
                 if (window.innerWidth <= 768) return;
-                const rect = card.getBoundingClientRect();
+                if (!rect) rect = card.getBoundingClientRect();
+                
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                const xNorm = (x / rect.width) - 0.5;
-                const yNorm = (y / rect.height) - 0.5;
+                const xNorm = gsap.utils.clamp(-0.5, 0.5, (x / rect.width) - 0.5);
+                const yNorm = gsap.utils.clamp(-0.5, 0.5, (y / rect.height) - 0.5);
                 
-                gsap.to(wrap, {
-                    rotationY: xNorm * 18,
-                    rotationX: -yNorm * 18,
-                    transformPerspective: 1000,
-                    transformOrigin: "center center",
-                    ease: "power2.out",
-                    duration: 0.4
-                });
+                // Hardware-accelerated 3D pitch/tilt updates
+                quickRotY(xNorm * 18);
+                quickRotX(-yNorm * 18);
 
                 // Pitch modulation
-                const yPosRatio = y / rect.height;
+                const yPosRatio = gsap.utils.clamp(0, 1, y / rect.height);
                 const targetFreq = 180 + (1.0 - yPosRatio) * 300;
                 
                 // Volume modulation
-                const xPosRatio = x / rect.width;
+                const xPosRatio = gsap.utils.clamp(0, 1, x / rect.width);
                 const targetGain = 0.02 + (xPosRatio * 0.06);
                 
                 updateAmbientHum(targetFreq, targetGain);
@@ -815,11 +819,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
             card.addEventListener('mouseleave', () => {
                 stopAmbientHum();
+                rect = null;
                 gsap.to(wrap, {
                     rotationY: 0,
                     rotationX: 0,
                     ease: "power3.out",
-                    duration: 0.8
+                    duration: 0.8,
+                    overwrite: "auto"
                 });
             });
         }
